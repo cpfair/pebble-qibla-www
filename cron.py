@@ -4,7 +4,7 @@ import concurrent.futures
 
 pending_pins = []
 user_count = 0
-for user in User.objects:
+for user in User.objects(timeline_token__exists=True):
     user_count += 1
     pending_pins += Timeline.push_pins_for_user(user)
 

@@ -19,7 +19,7 @@ class Timeline:
     def push_pins_for_user(user, sync=False):
         if not user.timeline_token:
             # They're not timeline-enabled
-            return
+            return []
         # Push pins for yesterday, today, tomorrow
         # (15s total)
         pending_pins = []
