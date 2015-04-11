@@ -1,5 +1,6 @@
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, render_template
 from models import User
+from praytimes import PrayTimes
 from timeline import Timeline
 from datetime import datetime
 import concurrent.futures
@@ -28,10 +29,31 @@ def subscribe():
     Timeline.push_pins_for_user(user)
     return ""
 
+@app.route('/settings/<user_token>',  methods=["GET", "POST"])
+def settings(user_token):
+    try:
+        user = User.objects.get(user_token=user_token)
+    except User.DoesNotExist:
+        return render_template('registration_wait.html')
+
+    # Wait until geocode completes
+    if not user.location_geoname:
+        return render_template('registration_wait.html')
+
+    if request.method == "POST":
+        user.config["method"] = request.form["method"]
+        user.config["asr"] = request.form["asr"]
+        user.save()
+        return render_template('settings_confirmed.html')
+
+    asr_options = ["Standard", "Hanafi"]
+    method_options = list(PrayTimes.methods.keys())
+    return render_template('settings.html', config=user.config, location=user.location_geoname, asr_options=asr_options, method_options=method_options)
+
 @app.route('/')
 def index():
     return "marhaba!"
     return redirect('https://apps.getpebble.com/applications/53ab84141d576ea3c30000d6')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

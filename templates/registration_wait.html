@@ -1,0 +1,13 @@
+{% extends "site.html" %}
+{% block content %}
+
+Waiting for registration...
+<div style="font-size:50%;margin-top:10px;">
+    If this takes too long, try closing and re-opening the watch app.
+</div>
+
+<script type="text/javascript">
+setTimeout(function(){ window.location.reload(); }, 1000);
+</script>
+
+{% endblock %}
