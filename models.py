@@ -10,6 +10,7 @@ class User(me.Document):
     timeline_token = me.StringField()
     location = me.PointField()
     location_geoname = me.StringField()
+    tz_offset = me.IntField()
     created_at = me.DateTimeField()
     subscribed_at = me.DateTimeField()
     # It melted down when I tried name the db field "config"
