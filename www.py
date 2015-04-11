@@ -25,8 +25,10 @@ def subscribe():
     user.location = [float(data["location_lat"]), float(data["location_lon"])]
     user.subscribed_at = datetime.utcnow()
     user.save()
-    async_geocode_pool.submit(async_geocode, user)
-    Timeline.push_pins_for_user(user)
+    def geocode_callback(future):
+        print("Geocode callback OK!")
+        Timeline.push_pins_for_user(user)
+    async_geocode_pool.submit(async_geocode, user).add_done_callback(geocode_callback)
     return ""
 
 @app.route('/settings/<user_token>',  methods=["GET", "POST"])
