@@ -31,7 +31,8 @@ class Timeline:
 
     def _push_pins_for_date(user, date):
         pt = PrayTimes()
-        pt.setMethod("ISNA")
+        pt.setMethod(user.config["method"])
+        pt.adjust({"asr": user.config["asr"]})
         loc = user.location
         if hasattr(loc, "keys"):
             loc = loc['coordinates']

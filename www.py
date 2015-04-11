@@ -44,6 +44,7 @@ def settings(user_token):
         user.config["method"] = request.form["method"]
         user.config["asr"] = request.form["asr"]
         user.save()
+        Timeline.push_pins_for_user(user)
         return render_template('settings_confirmed.html')
 
     asr_options = ["Standard", "Hanafi"]
