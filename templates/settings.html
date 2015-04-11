@@ -4,17 +4,17 @@
     <label for="method">Calculation Method</label><br/>
     <select id="method" name="method">
     {% for method in method_options %}
-        <option value="{{ method }}" {% if config.method == method %}selected{% endif %}>{{ method }}</option>
+        <option value="{{ method }}" {% if user.config.method == method %}selected{% endif %}>{{ method }}</option>
     {% endfor %}
     </select><br/>
     <label for="asr">Asr</label><br/>
     <select id="asr" name="asr">
         {% for asr in asr_options %}
-        <option value="{{ asr }}" {% if config.asr == asr %}selected{% endif %}>{{ asr }}</option>
+        <option value="{{ asr }}" {% if user.config.asr == asr %}selected{% endif %}>{{ asr }}</option>
     {% endfor %}
     </select>
     <label>Current Location</label><br/>
-    {{ location if location else "(unknown)" }}
+    {{ user.location_geoname if user.location_geoname else "(unknown)" }}
 
     <button type="submit" class="save">Save</button>
 </form>

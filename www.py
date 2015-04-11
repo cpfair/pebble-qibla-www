@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, render_template
+from flask import Flask, redirect, request, render_template, jsonify
 from models import User
 from praytimes import PrayTimes
 from timeline import Timeline
@@ -6,11 +6,6 @@ from datetime import datetime
 import concurrent.futures
 
 app = Flask(__name__)
-
-async_geocode_pool = concurrent.futures.ThreadPoolExecutor(max_workers=5)
-def async_geocode(user):
-    user.geocode()
-    user.save()
 
 @app.route('/subscribe', methods=["POST"])
 def subscribe():
@@ -21,15 +16,16 @@ def subscribe():
     except User.DoesNotExist:
         user = User(user_token=user_token)
         user.created_at = datetime.utcnow()
-    user.timeline_token = data["timeline_token"]
+    if "timeline_token" in data:
+        user.timeline_token = data["timeline_token"]
     user.location = [float(data["location_lat"]), float(data["location_lon"])]
     user.subscribed_at = datetime.utcnow()
+    user.geocode()
     user.save()
-    def geocode_callback(future):
-        print("Geocode callback OK!")
-        Timeline.push_pins_for_user(user)
-    async_geocode_pool.submit(async_geocode, user).add_done_callback(geocode_callback)
-    return ""
+    Timeline.push_pins_for_user(user)
+
+    result = {"location_geoname": user.location_geoname}
+    return jsonify(result)
 
 @app.route('/settings/<user_token>',  methods=["GET", "POST"])
 def settings(user_token):
@@ -42,6 +38,9 @@ def settings(user_token):
     if not user.location_geoname:
         return render_template('registration_wait.html')
 
+    if not user.timeline_token:
+        return render_template('no_timeline.html')
+
     if request.method == "POST":
         old_config = dict(user.config)
         user.config["method"] = request.form["method"]
@@ -53,7 +52,7 @@ def settings(user_token):
 
     asr_options = ["Standard", "Hanafi"]
     method_options = list(PrayTimes.methods.keys())
-    return render_template('settings.html', config=user.config, location=user.location_geoname, asr_options=asr_options, method_options=method_options)
+    return render_template('settings.html', user=user, asr_options=asr_options, method_options=method_options)
 
 @app.route('/')
 def index():
