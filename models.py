@@ -45,4 +45,9 @@ class User(me.Document):
                     del self._sparse_config[k]
         super(User, self).save()
 
-me.connect('qibla')
+MONGO_URI = os.environ.get('MONGOLAB_URI', None)
+MONGODB_SETTINGS = {}
+if not MONGO_URI:
+    me.connect('qibla')
+else:
+    me.connect(MONGO_URI.split("/")[-1], host=MONGO_URI)
