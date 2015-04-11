@@ -18,7 +18,7 @@ class User(me.Document):
 
     def geocode(self):
         import requests
-        res = requests.get('http://api.geonames.org/findNearbyPlaceNameJSON', params={'lat': self.location[0], 'lng': self.location[1], 'maxRows': 1, 'username': os.environ.get('GEONAMES_USERNAME', 'demo')})
+        res = requests.get('http://api.geonames.org/findNearbyPlaceNameJSON', params={'lat': self.location[0], 'lng': self.location[1], 'cities': 'cities1000', 'maxRows': 1, 'username': os.environ.get('GEONAMES_USERNAME', 'demo')})
         for place in res.json()["geonames"]:
             self.location_geoname = place["name"]
 
