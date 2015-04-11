@@ -7,13 +7,9 @@ body, html {
     font-weight: thin;
     color: white;
     text-align: center;
-    font-size: 100%;
+    font-size: 36px;
     min-height: 100%;
     min-width: 100%;
-}
-
-html {
-    
 }
 
 body {
@@ -26,8 +22,6 @@ body {
     background: linear-gradient(135deg,  #030206 0%,#011337 73%,#1e3c6e 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#030206', endColorstr='#1e3c6e',GradientType=1 );
 }
-
-
 
 h1 {
     font-size: 45px;
@@ -49,13 +43,14 @@ label {
 select, button {
     border-radius: 5px;
     -webkit-appearance: none;
-    border:0.5px solid white;
+    border: 1px solid white;
     background: none;
     color: white;
     font-family: Lato, sans-serif;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
-    padding-bottom: 6px;
+    padding-bottom: 11px;
+    font-size: 30px;
 }
 
 option {
@@ -66,7 +61,7 @@ option {
 
 .content {
     padding-top: 5px;
-    margin: 5px;
+    margin: 10px;
     margin-top: 0;
     margin-bottom: 0;
 }
@@ -81,5 +76,10 @@ button.save {
 img.logo {
     margin: 10px auto;
     display: block;
-    width: 55px;
+    width: 125px;
+}
+
+.fineprint {
+    font-size:70%;
+    margin-top:10px;
 }
