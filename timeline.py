@@ -61,5 +61,12 @@ class Timeline:
                 "title": Timeline.PRAYER_NAMES[prayer],
                 "subtitle": "in %s" % user.location_geoname,
                 "tinyIcon": "system://images/TIMELINE_SUN_TINY"
-            }
+            },
+            "actions": [
+                {
+                    "title": "Qibla Compass",
+                    "type": "openWatchApp",
+                    "launchCode": 20
+                }
+            ]
         }
