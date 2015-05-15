@@ -45,6 +45,7 @@ class Timeline:
 
     def _push_time_pin(user, prayer, timestamp):
         pin_data = Timeline._generate_pin(user, prayer, timestamp)
+        print(pin_data)
         res = requests.put("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_data["id"],
                            data=json.dumps(pin_data),
                            headers={"X-User-Token": user.timeline_token, "Content-Type": "application/json"})
