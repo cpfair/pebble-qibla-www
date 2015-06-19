@@ -39,6 +39,7 @@ class Timeline:
         loc = user.location
         if hasattr(loc, "keys"):
             loc = loc['coordinates']
+        loc = loc[::-1] # From the database, it's lon/lat
         times = pt.getTimes(date, loc, 0, format="Float")
         for key in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]:
             yield Timeline.executor.submit(Timeline._push_time_pin, user, key, datetime.combine(date, time()).replace(tzinfo=pytz.utc) + timedelta(hours=times[key]))

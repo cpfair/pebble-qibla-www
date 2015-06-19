@@ -22,7 +22,7 @@ def subscribe():
         user.created_at = datetime.utcnow()
     if "timeline_token" in data:
         user.timeline_token = data["timeline_token"]
-    user.location = [float(data["location_lat"]), float(data["location_lon"])]
+    user.location = [float(data["location_lon"]), float(data["location_lat"])]
     user.tz_offset = int(data["tz_offset"])
     user.subscribed_at = datetime.utcnow()
     user.geocode()
