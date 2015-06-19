@@ -4,9 +4,12 @@ from praytimes import PrayTimes
 from timeline import Timeline
 from datetime import datetime
 import concurrent.futures
-import newrelic
+import logging
+from raven.contrib.flask import Sentry
 
 app = Flask(__name__)
+
+sentry = Sentry(app, logging=True, level=logging.ERROR)
 
 @app.route('/subscribe', methods=["POST"])
 def subscribe():

@@ -4,4 +4,4 @@ pymongo==2.7.2
 mongoengine
 pytz
 gunicorn
-newrelic
+raven[flask]
