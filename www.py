@@ -13,7 +13,6 @@ sentry = Sentry(app, logging=True, level=logging.ERROR)
 
 @app.route('/subscribe', methods=["POST"])
 def subscribe():
-    newrelic.agent.add_custom_parameter('request_body', request.get_json())
     data = request.get_json()
     user_token = data["user_token"]
     try:
