@@ -4,11 +4,13 @@ from praytimes import PrayTimes
 from timeline import Timeline
 from datetime import datetime
 import concurrent.futures
+import newrelic
 
 app = Flask(__name__)
 
 @app.route('/subscribe', methods=["POST"])
 def subscribe():
+    newrelic.agent.add_custom_parameter('request_body', request.get_json())
     data = request.get_json()
     user_token = data["user_token"]
     try:
