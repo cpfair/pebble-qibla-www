@@ -89,6 +89,9 @@ class PrayTimes():
         'Egypt': {
             'name': 'Egyptian General Authority of Survey',
             'params': { 'fajr': 19.5, 'isha': 17.5 } },
+        'Malaysia': {
+            'name': 'Malaysia',
+            'params': { 'fajr': 19.66, 'isha': 18.285 } },
         'Makkah': {
             'name': 'Umm Al-Qura University, Makkah',
             'params': { 'fajr': 18.5, 'isha': '90 min' } },  # fajr was 19 degrees before 1430 hijri
