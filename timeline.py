@@ -62,13 +62,24 @@ class Timeline:
                 "type": "genericPin",
                 "title": Timeline.PRAYER_NAMES[prayer],
                 "subtitle": "in %s" % user.location_geoname,
-                "tinyIcon": "system://images/TIMELINE_SUN_TINY"
+                "tinyIcon": "system://images/NOTIFICATION_FLAG"
             },
             "actions": [
                 {
                     "title": "Qibla Compass",
                     "type": "openWatchApp",
                     "launchCode": 20
+                }
+            ],
+            "reminders": [
+                {
+                  "time": timestamp.isoformat(),
+                  "layout": {
+                    "type": "genericReminder",
+                    "title": Timeline.PRAYER_NAMES[prayer],
+                    "locationName": user.location_geoname,
+                    "tinyIcon": "system://images/NOTIFICATION_FLAG"
+                  }
                 }
             ]
         }
