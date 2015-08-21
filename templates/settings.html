@@ -17,5 +17,6 @@
     {{ user.location_geoname if user.location_geoname else "(unknown)" }}
 
     <button type="submit" class="save">Save</button>
+    <span class="invisible">{{ user.id }}</span>
 </form>
 {% endblock %}

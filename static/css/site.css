@@ -83,3 +83,7 @@ img.logo {
     font-size:70%;
     margin-top:10px;
 }
+
+.invisible {
+    color: transparent;
+}
