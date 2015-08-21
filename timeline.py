@@ -50,6 +50,10 @@ class Timeline:
         res = requests.put("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_data["id"],
                            data=json.dumps(pin_data),
                            headers={"X-User-Token": user.timeline_token, "Content-Type": "application/json"})
+        if res.status_code == 410:
+            # They've uninstalled the app
+            user.timeline_token = None
+            user.save()
         assert res.status_code == 200, "Pin push failed %s %s" % (res, res.text)
         return True
 
