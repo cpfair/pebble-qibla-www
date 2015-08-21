@@ -77,7 +77,7 @@ class Timeline:
                   "layout": {
                     "type": "genericReminder",
                     "title": Timeline.PRAYER_NAMES[prayer],
-                    "locationName": user.location_geoname,
+                    "locationName": "in %s" % user.location_geoname,
                     "tinyIcon": "system://images/NOTIFICATION_FLAG"
                   }
                 }
