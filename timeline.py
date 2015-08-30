@@ -42,10 +42,10 @@ class Timeline:
         loc = loc[::-1] # From the database, it's lon/lat
         times = pt.getTimes(date, loc, 0, format="Float")
         for key in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]:
-            yield Timeline.executor.submit(Timeline._push_time_pin, user, key, datetime.combine(date, time()).replace(tzinfo=pytz.utc) + timedelta(hours=times[key]))
+            yield Timeline.executor.submit(Timeline._push_time_pin, user, key, date, datetime.combine(date, time()).replace(tzinfo=pytz.utc) + timedelta(hours=times[key]))
 
-    def _push_time_pin(user, prayer, timestamp):
-        pin_data = Timeline._generate_pin(user, prayer, timestamp)
+    def _push_time_pin(user, prayer, date, timestamp):
+        pin_data = Timeline._generate_pin(user, prayer, date, timestamp)
         print(pin_data)
         res = requests.put("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_data["id"],
                            data=json.dumps(pin_data),
@@ -57,8 +57,8 @@ class Timeline:
         assert res.status_code == 200, "Pin push failed %s %s" % (res, res.text)
         return True
 
-    def _generate_pin(user, prayer, timestamp):
-        pin_id = "%s:%s:%s" % (user.user_token, timestamp.date(), prayer)
+    def _generate_pin(user, prayer, date, timestamp):
+        pin_id = "%s:%s:%s" % (user.user_token, date, prayer)
         return {
             "id": pin_id,
             "time": timestamp.isoformat(),
