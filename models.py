@@ -3,8 +3,11 @@ import os
 
 class User(me.Document):
     DEFAULT_CONFIG = {
+        # These match up with keys in praytimes.py
         "method": "ISNA",
-        "asr": "Standard"
+        "asr": "Standard",
+        # These don't
+        "prayer_names": "standard"
     }
     user_token = me.StringField()
     timeline_token = me.StringField()

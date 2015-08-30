@@ -9,8 +9,14 @@
     </select><br/>
     <label for="asr">Asr</label><br/>
     <select id="asr" name="asr">
-        {% for asr in asr_options %}
+    {% for asr in asr_options %}
         <option value="{{ asr }}" {% if user.config.asr == asr %}selected{% endif %}>{{ asr }}</option>
+    {% endfor %}
+    </select>
+    <label for="prayer_names">Prayer Names</label><br/>
+    <select id="prayer_names" name="prayer_names">
+    {% for k, exemplar in prayer_name_options.items() %}
+        <option value="{{ k }}" {% if user.config.prayer_names == k %}selected{% endif %}>{{ exemplar }}</option>
     {% endfor %}
     </select>
     <label>Current Location</label><br/>

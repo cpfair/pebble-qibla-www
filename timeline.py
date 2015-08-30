@@ -7,14 +7,25 @@ import json
 
 
 class Timeline:
-    PRAYER_NAMES = {
-        "fajr": "Fajr",
-        "sunrise": "Sunrise",
-        "dhuhr": "Dhuhr",
-        "asr": "Asr",
-        "maghrib": "Maghrib",
-        "isha": "Isha"
+    PRAYER_NAMES =  {
+        "standard": {
+            "fajr": "Fajr",
+            "sunrise": "Sunrise",
+            "dhuhr": "Dhuhr",
+            "asr": "Asr",
+            "maghrib": "Maghrib",
+            "isha": "Isha"
+        },
+        "turkish": {
+            "fajr": "İmsak",
+            "sunrise": "Güneş",
+            "dhuhr": "Öğle",
+            "asr": "İkindi",
+            "maghrib": "Akşam",
+            "isha": "Yatsı"
+        }
     }
+
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=20)
     def push_pins_for_user(user, sync=False, clear=True):
         if not user.timeline_token:
@@ -78,12 +89,13 @@ class Timeline:
 
     def _generate_pin(user, prayer, date, timestamp):
         pin_id = "%s:%s:%s" % (user.user_token, date, prayer)
+        prayer_name = Timeline.PRAYER_NAMES[user.config["prayer_names"]][prayer]
         return {
             "id": pin_id,
             "time": timestamp.isoformat(),
             "layout": {
                 "type": "genericPin",
-                "title": Timeline.PRAYER_NAMES[prayer],
+                "title": prayer_name,
                 "subtitle": "in %s" % user.location_geoname,
                 "tinyIcon": "system://images/NOTIFICATION_FLAG"
             },
@@ -99,7 +111,7 @@ class Timeline:
                   "time": timestamp.isoformat(),
                   "layout": {
                     "type": "genericReminder",
-                    "title": Timeline.PRAYER_NAMES[prayer],
+                    "title": prayer_name,
                     "locationName": "in %s" % user.location_geoname,
                     "tinyIcon": "system://images/NOTIFICATION_FLAG"
                   }

@@ -50,6 +50,7 @@ def settings(user_token):
         old_config = dict(user.config)
         user.config["method"] = request.form["method"]
         user.config["asr"] = request.form["asr"]
+        user.config["prayer_names"] = request.form["prayer_names"]
         user.save()
         if old_config != user.config:
             Timeline.push_pins_for_user(user)
@@ -57,7 +58,8 @@ def settings(user_token):
 
     asr_options = ["Standard", "Hanafi"]
     method_options = list(PrayTimes.methods.keys())
-    return render_template('settings.html', user=user, asr_options=asr_options, method_options=method_options)
+    prayer_name_options = {k: ", ".join([v[p] for p in ["fajr", "dhuhr", "asr", "maghrib", "isha"]]) for k,v in sorted(list(Timeline.PRAYER_NAMES.items()), key=lambda i: i[0] == "standard")}
+    return render_template('settings.html', user=user, asr_options=asr_options, method_options=method_options, prayer_name_options=prayer_name_options)
 
 @app.route('/')
 def index():
