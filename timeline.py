@@ -1,6 +1,8 @@
 from praytimes import PrayTimes
 from datetime import date, time, timedelta, datetime
+from collections import defaultdict
 import concurrent.futures
+import threading
 import requests
 import pytz
 import json
@@ -27,6 +29,9 @@ class Timeline:
     }
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=20)
+    # I'm not sure if the ThreadPoolExecutor ever shuts down threads, meaning we might need to trim this dict.
+    executor_http_sessions = defaultdict(lambda: requests.Session())
+
     def push_pins_for_user(user, sync=False, clear=True):
         if not user.timeline_token:
             # They're not timeline-enabled
@@ -64,8 +69,9 @@ class Timeline:
             yield Timeline.executor.submit(Timeline._delete_time_pin, user, key, date)
 
     def _delete_time_pin(user, prayer, date):
+        session = Timeline.executor_http_sessions[threading.current_thread().ident]
         pin_id = "%s:%s:%s" % (user.user_token, date, prayer)
-        res = requests.delete("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_id,
+        res = session.delete("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_id,
                            headers={"X-User-Token": user.timeline_token, "Content-Type": "application/json"})
         if res.status_code == 410:
             # They've uninstalled the app
@@ -75,9 +81,10 @@ class Timeline:
         return True
 
     def _push_time_pin(user, prayer, date, timestamp):
+        session = Timeline.executor_http_sessions[threading.current_thread().ident]
         pin_data = Timeline._generate_pin(user, prayer, date, timestamp)
         print(pin_data)
-        res = requests.put("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_data["id"],
+        res = session.put("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_data["id"],
                            data=json.dumps(pin_data),
                            headers={"X-User-Token": user.timeline_token, "Content-Type": "application/json"})
         if res.status_code == 410:
