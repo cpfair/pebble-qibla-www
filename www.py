@@ -57,7 +57,7 @@ def settings(user_token):
         return render_template('settings_confirmed.html')
 
     asr_options = ["Standard", "Hanafi"]
-    method_options = list(PrayTimes.methods.keys())
+    method_options = sorted(list(PrayTimes.methods.keys()))
     prayer_name_options = {k: ", ".join([v[p] for p in ["fajr", "dhuhr", "asr", "maghrib", "isha"]]) for k,v in sorted(list(Timeline.PRAYER_NAMES.items()), key=lambda i: i[0] == "standard")}
     return render_template('settings.html', user=user, asr_options=asr_options, method_options=method_options, prayer_name_options=prayer_name_options)
 
