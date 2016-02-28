@@ -83,6 +83,10 @@ class PrayTimes():
         'MWL': {
             'name': 'Muslim World League',
             'params': { 'fajr': 18, 'isha': 17 } },
+        'Diyanet': {
+            'name': 'Diyanet İşleri Başkanlığı',
+            'params': { 'fajr': 18, 'isha': 17 },
+            'offsets': { 'fajr': -2, 'sunrise': -6, 'dhuhr': 7, 'asr': 4, 'maghrib': 7, 'isha': 1 } },
         'ISNA': {
             'name': 'Islamic Society of North America (ISNA)',
             'params': { 'fajr': 15, 'isha': 15 } },
@@ -149,8 +153,11 @@ class PrayTimes():
             self.settings[name] = value
 
         # init time offsets
-        for name in self.timeNames:
-            self.offset[name] = 0
+        if "offsets" in self.methods[self.calcMethod]:
+            self.tune(self.methods[self.calcMethod]["offsets"])
+        else:
+            for name in self.timeNames:
+                self.offset[name] = 0
 
 
     #-------------------- Interface Functions --------------------
@@ -158,6 +165,8 @@ class PrayTimes():
     def setMethod(self, method):
         if method in self.methods:
             self.adjust(self.methods[method]["params"])
+            if "offsets" in self.methods[method]:
+                self.tune(self.methods[method]["offsets"])
             self.calcMethod = method
 
     def adjust(self, params):
