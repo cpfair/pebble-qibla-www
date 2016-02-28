@@ -173,7 +173,7 @@ class PrayTimes():
         self.settings.update(params)
 
     def tune(self, timeOffsets):
-        self.offsets.update(timeOffsets)
+        self.offset.update(timeOffsets)
 
     def getMethod(self):
         return self.calcMethod
