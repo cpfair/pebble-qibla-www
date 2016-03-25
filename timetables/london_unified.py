@@ -29,11 +29,11 @@ class LondonUnified(Timetable):
             "date": date.strftime("%Y-%m-%d")
         }
         time_table = requests.get("http://www.londonprayertimes.com/api/times/", params=params).json()
-        return {
+        return ("London", {
                 "fajr":    cls._mangleTime(time_table["fajr"], date, False),
                 "sunrise": cls._mangleTime(time_table["sunrise"], date, False),
                 "dhuhr":   cls._mangleTime(time_table["dhuhr"], date, True),
                 "asr":     cls._mangleTime(time_table["asr"], date, True),
                 "maghrib": cls._mangleTime(time_table["magrib"], date, True),
                 "isha":    cls._mangleTime(time_table["isha"], date, True)
-        }
+        })

@@ -57,9 +57,9 @@ class Timeline:
         if hasattr(loc, "keys"):
             loc = loc['coordinates']
         loc = loc[::-1] # From the database, it's lon/lat
-        times = TimetableResolver.Resolve(user.config["method"], user.config, loc, date)
+        geoname_option, times = TimetableResolver.Resolve(user.config["method"], user.config, loc, date)
         for key in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]:
-            yield Timeline.executor.submit(Timeline._push_time_pin, user, key, date, datetime.combine(date, time()).replace(tzinfo=pytz.utc) + timedelta(hours=times[key]))
+            yield Timeline.executor.submit(Timeline._push_time_pin, user, geoname_option, key, date, datetime.combine(date, time()).replace(tzinfo=pytz.utc) + timedelta(hours=times[key]))
 
     def _delete_pins_for_date(user, date):
         for key in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]:
@@ -77,9 +77,9 @@ class Timeline:
         assert res.status_code == 200, "Pin delete failed %s %s" % (res, res.text)
         return True
 
-    def _push_time_pin(user, prayer, date, timestamp):
+    def _push_time_pin(user, geoname_option, prayer, date, timestamp):
         session = Timeline.executor_http_sessions[threading.current_thread().ident]
-        pin_data = Timeline._generate_pin(user, prayer, date, timestamp)
+        pin_data = Timeline._generate_pin(user, geoname_option, prayer, date, timestamp)
         print(str(pin_data).encode("utf-8"))
         res = session.put("https://timeline-api.getpebble.com/v1/user/pins/%s" % pin_data["id"],
                            data=json.dumps(pin_data),
@@ -91,16 +91,17 @@ class Timeline:
         assert res.status_code == 200, "Pin push failed %s %s" % (res, res.text)
         return True
 
-    def _generate_pin(user, prayer, date, timestamp):
+    def _generate_pin(user, geoname_option, prayer, date, timestamp):
         pin_id = "%s:%s:%s" % (user.user_token, date, prayer)
         prayer_name = Timeline.PRAYER_NAMES[user.config["prayer_names"]][prayer]
+        geoname = (geoname_option if geoname_option else user.location_geoname)
         return {
             "id": pin_id,
             "time": timestamp.isoformat(),
             "layout": {
                 "type": "genericPin",
                 "title": prayer_name,
-                "subtitle": "in %s" % user.location_geoname,
+                "subtitle": "in %s" % geoname,
                 "tinyIcon": "system://images/NOTIFICATION_FLAG"
             },
             "actions": [
@@ -116,7 +117,7 @@ class Timeline:
                   "layout": {
                     "type": "genericReminder",
                     "title": prayer_name,
-                    "locationName": "in %s" % user.location_geoname,
+                    "locationName": "in %s" % geoname,
                     "tinyIcon": "system://images/NOTIFICATION_FLAG"
                   }
                 }

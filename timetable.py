@@ -35,4 +35,4 @@ class TimetableResolver:
             pt = PrayTimes()
             pt.setMethod(method)
             pt.adjust({"asr": config["asr"]})
-            return pt.getTimes(date, location, 0, format="Float")
+            return None, pt.getTimes(date, location, 0, format="Float")
