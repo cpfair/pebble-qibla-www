@@ -48,6 +48,17 @@ class User(me.Document):
                     del self._sparse_config[k]
         super(User, self).save()
 
+
+class TimetableCachedTimes(me.Document):
+    key = me.StringField()
+    times = me.DictField()
+
+    meta = {
+        'indexes': [
+            'key'
+        ]
+    }
+
 MONGO_URI = os.environ.get('MONGOLAB_URI', None)
 MONGODB_SETTINGS = {}
 if not MONGO_URI:

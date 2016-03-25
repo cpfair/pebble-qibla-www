@@ -1,4 +1,4 @@
-from praytimes import PrayTimes
+from timetable import TimetableResolver
 from datetime import date, time, timedelta, datetime
 from collections import defaultdict
 import concurrent.futures
@@ -53,14 +53,11 @@ class Timeline:
             return pending_pins
 
     def _push_pins_for_date(user, date):
-        pt = PrayTimes()
-        pt.setMethod(user.config["method"])
-        pt.adjust({"asr": user.config["asr"]})
         loc = user.location
         if hasattr(loc, "keys"):
             loc = loc['coordinates']
         loc = loc[::-1] # From the database, it's lon/lat
-        times = pt.getTimes(date, loc, 0, format="Float")
+        times = TimetableResolver.Resolve(user.config["method"], user.config, loc, date)
         for key in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]:
             yield Timeline.executor.submit(Timeline._push_time_pin, user, key, date, datetime.combine(date, time()).replace(tzinfo=pytz.utc) + timedelta(hours=times[key]))
 
