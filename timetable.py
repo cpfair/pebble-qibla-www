@@ -1,10 +1,12 @@
 from praytimes import PrayTimes
 from timetables.london_unified import LondonUnified
+from timetables.malaysia import Malaysia
 from models import TimetableCachedTimes
 
 class TimetableResolver:
     _resolvers = {
-        "London": LondonUnified
+        "London": LondonUnified,
+        "Malaysia": Malaysia
     }
 
     _cache = {}
@@ -19,7 +21,7 @@ class TimetableResolver:
             # Dedicated resolver, vs. calculation.
             # We assume this lookup is costly (calling a remote API, and cache it).
             resolver = TimetableResolver._resolvers[method]
-            cache_key = "%s:%s" % (method, resolver.CacheKey(location, date))
+            cache_key = "%s:%s:%s" % (method, resolver.CacheKey(location, date), date.strftime("%Y-%m-%d"))
             if cache_key in TimetableResolver._cache:
                 return TimetableResolver._cache[cache_key]
             try:

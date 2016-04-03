@@ -8,7 +8,7 @@ import requests
 class LondonUnified(Timetable):
     @classmethod
     def CacheKey(cls, location, date):
-        return date.strftime("%Y-%m-%d")
+        return ""
 
     @classmethod
     def _mangleTime(cls, time_str, date, aft):
