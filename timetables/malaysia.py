@@ -25,8 +25,11 @@ class Malaysia(Timetable):
         return cls._lookupZone(location).Code
 
     @classmethod
-    def _mangleTime(cls, time_str, date):
+    def _mangleTime(cls, time_str, date, aft):
         time = datetime.strptime(time_str, "%H:%M").time()
+        if aft:
+            if time.hour < 12:
+                time = time.replace(hour=time.hour + 12)
         dt = TIMEZONE.localize(datetime.combine(date, time))
         utc_dt = dt.astimezone(utc).replace(tzinfo=None)
         since_midnight = utc_dt - datetime.combine(date, datetime.min.time())
@@ -51,12 +54,12 @@ class Malaysia(Timetable):
             day, fajr, _, sunrise, dhuhr, asr, maghrib, isha = time_data.groups()
             if int(day) == date.day:
                 return (zone.Name, {
-                        "fajr": cls._mangleTime(fajr, date),
-                        "sunrise": cls._mangleTime(sunrise, date),
-                        "dhuhr": cls._mangleTime(dhuhr, date),
-                        "asr": cls._mangleTime(asr, date),
-                        "maghrib": cls._mangleTime(maghrib, date),
-                        "isha": cls._mangleTime(isha, date),
+                        "fajr": cls._mangleTime(fajr, date, False),
+                        "sunrise": cls._mangleTime(sunrise, date, False),
+                        "dhuhr": cls._mangleTime(dhuhr, date, True),
+                        "asr": cls._mangleTime(asr, date, True),
+                        "maghrib": cls._mangleTime(maghrib, date, True),
+                        "isha": cls._mangleTime(isha, date, True),
                         }
                     )
         raise ValueError("No times returned")
