@@ -27,6 +27,7 @@ class Timeline:
             "isha": "Yatsı"
         }
     }
+    TIMES_TO_PUSH = ["fajr", "dhuhr", "asr", "maghrib", "isha"]
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=20)
     # I'm not sure if the ThreadPoolExecutor ever shuts down threads, meaning we might need to trim this dict.
@@ -58,11 +59,11 @@ class Timeline:
             loc = loc['coordinates']
         loc = loc[::-1] # From the database, it's lon/lat
         geoname_option, times = TimetableResolver.Resolve(user.config["method"], user.config, loc, date)
-        for key in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]:
+        for key in Timeline.TIMES_TO_PUSH:
             yield Timeline.executor.submit(Timeline._push_time_pin, user, geoname_option, key, date, datetime.combine(date, time()).replace(tzinfo=pytz.utc) + timedelta(hours=times[key]))
 
     def _delete_pins_for_date(user, date):
-        for key in ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]:
+        for key in Timeline.TIMES_TO_PUSH:
             yield Timeline.executor.submit(Timeline._delete_time_pin, user, key, date)
 
     def _delete_time_pin(user, prayer, date):
