@@ -122,7 +122,7 @@ class PrayTimes():
         "imsak"    : '10 min',
         "dhuhr"    : '0 min',
         "asr"      : 'Standard',
-        "highLats" : 'NightMiddle'
+        "highLats" : 'OneSeventh'
     }
 
     timeFormat = '24h'
