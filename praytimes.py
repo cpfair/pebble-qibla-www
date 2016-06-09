@@ -143,18 +143,8 @@ class PrayTimes():
                 if not name in config['params'] or config['params'][name] is None:
                     config['params'][name] = value
 
-        # initialize settings
-        self.calcMethod = method if method in self.methods else 'MWL'
-        params = self.methods[self.calcMethod]['params']
-        for name, value in params.items():
-            self.settings[name] = value
-
-        # init time offsets
-        if "offsets" in self.methods[self.calcMethod]:
-            self.tune(self.methods[self.calcMethod]["offsets"])
-        else:
-            for name in self.timeNames:
-                self.offset[name] = 0
+        for name in self.timeNames:
+            self.offset[name] = 0
 
 
     #-------------------- Interface Functions --------------------
@@ -425,16 +415,11 @@ class PrayTimes():
         a = a - mode * (math.floor(a / mode))
         return a + mode if a < 0 else a
 
-
-#---------------------- prayTimes Object -----------------------
-
-prayTimes = PrayTimes()
-
-
 #-------------------------- Test Code --------------------------
 
 # sample code to run in standalone mode only
 if __name__ == "__main__":
+    prayTimes = PrayTimes()
     from datetime import date
     print('Prayer Times for today in Waterloo/Canada\n'+ ('='* 41))
     times = prayTimes.getTimes(date.today(), (43, -80), -5);
