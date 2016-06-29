@@ -14,11 +14,8 @@ sentry = Sentry(app, logging=True, level=logging.ERROR)
 def subscribe():
     data = request.get_json()
     user_token = data["user_token"]
-    try:
-        user = User.objects.get(user_token=user_token)
-    except User.DoesNotExist:
-        user = User(user_token=user_token)
-        user.created_at = datetime.utcnow()
+    user = User.objects(user_token=user_token) \
+      .modify(upsert=True, new=True, set_on_insert__created_at=datetime.utcnow())
     if "timeline_token" in data:
         user.timeline_token = data["timeline_token"]
     user.location = [float(data["location_lon"]), float(data["location_lat"])]
