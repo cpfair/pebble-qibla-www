@@ -51,6 +51,7 @@ class User(me.Document):
 
 class TimetableCachedTimes(me.Document):
     key = me.StringField()
+    location_geoname = me.StringField()
     times = me.DictField()
 
     meta = {

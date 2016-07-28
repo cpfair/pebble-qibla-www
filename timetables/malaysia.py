@@ -45,15 +45,14 @@ class Malaysia(Timetable):
             "bulan": date.strftime("%m")
         }
         # This page contains an entire month's worth of data.
-        # We only care about this specific day - we ignore the rest.
-        # (could modify the caching to allow multiple returns, but no...)
         time_table = requests.get("http://www.e-solat.gov.my/web/muatturun.php", params=params)
         # Some zones return timestamps as "12.34" not "12:34".
         fixed_time_table_text = re.sub(r"([0-2]?\d)[:.]([0-6]\d)", r"\1:\2", time_table.text)
+        results = []
         for time_data in re.finditer(TIME_DATA_PATTERN, fixed_time_table_text, re.DOTALL):
             day, fajr, _, sunrise, dhuhr, asr, maghrib, isha = time_data.groups()
-            if int(day) == date.day:
-                return (zone.Name, {
+            this_date = date.replace(day=int(day))
+            results.append((zone.Name, this_date, {
                         "fajr": cls._mangleTime(fajr, date, False),
                         "sunrise": cls._mangleTime(sunrise, date, False),
                         "dhuhr": cls._mangleTime(dhuhr, date, True),
@@ -61,5 +60,5 @@ class Malaysia(Timetable):
                         "maghrib": cls._mangleTime(maghrib, date, True),
                         "isha": cls._mangleTime(isha, date, True),
                         }
-                    )
-        raise ValueError("No times returned")
+                    ))
+        return results
