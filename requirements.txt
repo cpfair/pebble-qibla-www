@@ -5,3 +5,4 @@ mongoengine
 pytz
 gunicorn
 raven[flask]
+pypdf2
