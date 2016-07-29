@@ -52,10 +52,19 @@ def settings(user_token):
             Timeline.push_pins_for_user(user)
         return render_template('settings_confirmed.html')
 
+    # Allow calculation method to override geocoded name, where applicable
+    location = user.location
+    if hasattr(location, "keys"):
+        location = location['coordinates']
+    location = location[::-1] # From the database, it's lon/lat
+    location_geoname = TimetableResolver.ResolveLocationGeoname(user.config["method"], user.config, location)
+    if location_geoname is None:
+        location_geoname = user.location_geoname
+
     asr_options = ["Standard", "Hanafi"]
     method_options = sorted(list(TimetableResolver.Methods()))
     prayer_name_options = {k: ", ".join([v[p] for p in ["fajr", "dhuhr", "asr", "maghrib", "isha"]]) for k,v in sorted(list(Timeline.PRAYER_NAMES.items()), key=lambda i: i[0] == "standard")}
-    return render_template('settings.html', user=user, asr_options=asr_options, method_options=method_options, prayer_name_options=prayer_name_options)
+    return render_template('settings.html', user=user, location_geoname=location_geoname, asr_options=asr_options, method_options=method_options, prayer_name_options=prayer_name_options)
 
 @app.route('/')
 def index():

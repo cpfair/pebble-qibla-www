@@ -3,6 +3,7 @@ from timetables.london_unified import LondonUnified
 from timetables.malaysia import Malaysia
 from timetables.singapore import Singapore
 from models import TimetableCachedTimes
+import datetime
 
 class TimetableResolver:
     _resolvers = {
@@ -16,6 +17,11 @@ class TimetableResolver:
     @classmethod
     def Methods(cls):
         return list(PrayTimes.methods.keys()) + list(cls._resolvers.keys())
+
+    @classmethod
+    def ResolveLocationGeoname(cls, method, config, location):
+        # Cheap.
+        return cls.Resolve(method, config, location, datetime.datetime.now().date())[0]
 
     @classmethod
     def Resolve(cls, method, config, location, date):
