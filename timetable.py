@@ -30,8 +30,7 @@ class TimetableResolver:
                 return TimetableResolver._cache[query_cache_key]
             try:
                 cache_obj = TimetableCachedTimes.objects.get(key=query_cache_key)
-                TimetableResolver._cache[query_cache_key] = cache_obj.times
-                return (cache_obj.location_geoname, cache_obj.times)
+                TimetableResolver._cache[query_cache_key] = (cache_obj.location_geoname, cache_obj.times)
             except TimetableCachedTimes.DoesNotExist:
                 multi_day_times = resolver.Times(location, date)
                 # The resolver returns a list of (location, date, timedict) tuples.
@@ -40,7 +39,7 @@ class TimetableResolver:
                     day_cache_key = buildCacheKey(location, date)
                     TimetableResolver._cache[day_cache_key] = (location_geoname, times)
                     TimetableCachedTimes.objects(key=day_cache_key).update(key=day_cache_key, location_geoname=location_geoname, times=times, upsert=True)
-                return TimetableResolver._cache[query_cache_key]
+            return TimetableResolver._cache[query_cache_key]
         else:
             pt = PrayTimes()
             pt.setMethod(method)
