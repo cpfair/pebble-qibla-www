@@ -7,12 +7,14 @@
         <option value="{{ method }}" {% if user.config.method == method %}selected{% endif %}>{{ method }}</option>
     {% endfor %}
     </select><br/>
-    <label for="asr">Asr</label><br/>
-    <select id="asr" name="asr">
-    {% for asr in asr_options %}
-        <option value="{{ asr }}" {% if user.config.asr == asr %}selected{% endif %}>{{ asr }}</option>
-    {% endfor %}
-    </select>
+    <div id="asr-block">
+        <label for="asr">Asr</label><br/>
+        <select id="asr" name="asr">
+        {% for asr in asr_options %}
+            <option value="{{ asr }}" {% if user.config.asr == asr %}selected{% endif %}>{{ asr }}</option>
+        {% endfor %}
+        </select>
+    </div>
     <label for="prayer_names">Prayer Names</label><br/>
     <select id="prayer_names" name="prayer_names">
     {% for k, exemplar in prayer_name_options.items() %}
@@ -25,4 +27,13 @@
     <button type="submit" class="save">Save</button>
     <span class="invisible">{{ user.id }}</span>
 </form>
+<script type="text/javascript">
+    var asr_setting_availability = {{ asr_setting_availability | safe }};
+    function updateAsrVisibility() {
+        var visible = asr_setting_availability[document.getElementById("method").value];
+        document.getElementById("asr-block").style.display = visible ? "block" : "none";
+    }
+    document.getElementById("method").addEventListener("change", updateAsrVisibility);
+    updateAsrVisibility();
+</script>
 {% endblock %}

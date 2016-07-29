@@ -19,6 +19,13 @@ class TimetableResolver:
         return list(PrayTimes.methods.keys()) + list(cls._resolvers.keys())
 
     @classmethod
+    def AsrSettingAvailable(cls, method):
+        if method in PrayTimes.methods.keys():
+            return True
+        else:
+            return False
+
+    @classmethod
     def ResolveLocationGeoname(cls, method, config, location):
         # Cheap.
         return cls.Resolve(method, config, location, datetime.datetime.now().date())[0]

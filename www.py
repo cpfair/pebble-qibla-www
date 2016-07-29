@@ -4,6 +4,7 @@ from timetable import TimetableResolver
 from timeline import Timeline
 from datetime import datetime
 import logging
+import json
 from raven.contrib.flask import Sentry
 
 app = Flask(__name__)
@@ -62,9 +63,11 @@ def settings(user_token):
         location_geoname = user.location_geoname
 
     asr_options = ["Standard", "Hanafi"]
+
     method_options = sorted(list(TimetableResolver.Methods()))
+    asr_setting_availability = json.dumps({x: TimetableResolver.AsrSettingAvailable(x) for x in method_options})
     prayer_name_options = {k: ", ".join([v[p] for p in ["fajr", "dhuhr", "asr", "maghrib", "isha"]]) for k,v in sorted(list(Timeline.PRAYER_NAMES.items()), key=lambda i: i[0] == "standard")}
-    return render_template('settings.html', user=user, location_geoname=location_geoname, asr_options=asr_options, method_options=method_options, prayer_name_options=prayer_name_options)
+    return render_template('settings.html', user=user, location_geoname=location_geoname, asr_options=asr_options, method_options=method_options, asr_setting_availability=asr_setting_availability, prayer_name_options=prayer_name_options)
 
 @app.route('/')
 def index():
