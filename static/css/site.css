@@ -33,6 +33,10 @@ h2 {
     margin: 0;
 }
 
+a {
+    color: inherit;
+}
+
 label {
     font-size: 80%;
     display: inline-block;
@@ -86,4 +90,9 @@ img.logo {
 
 .invisible {
     color: transparent;
+}
+
+.elbbep-warning {
+    display: none;
+    font-style: italic;
 }

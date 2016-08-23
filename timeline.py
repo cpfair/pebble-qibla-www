@@ -18,6 +18,14 @@ class Timeline:
             "maghrib": "Maghrib",
             "isha": "Isha"
         },
+        "arabic": {
+            "fajr": "الفجر",
+            "sunrise": "الشروق",
+            "dhuhr": "الظهر",
+            "asr": "العصر",
+            "maghrib": "المغرب",
+            "isha": "العشاء"
+        },
         "turkish": {
             "fajr": "İmsak",
             "sunrise": "Güneş",

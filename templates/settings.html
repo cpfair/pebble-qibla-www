@@ -21,6 +21,7 @@
         <option value="{{ k }}" {% if user.config.prayer_names == k %}selected{% endif %}>{{ exemplar }}</option>
     {% endfor %}
     </select>
+    <div class="fineprint elbbep-warning" id="elbbep-warning">(install <a href="https://elbbep.cpfx.ca" target="_blank">elbbeP</a> to see Arabic prayer names)</div>
     <label>Current Location</label><br/>
     {{ location_geoname if location_geoname else "(unknown)" }}
 
@@ -35,5 +36,12 @@
     }
     document.getElementById("method").addEventListener("change", updateAsrVisibility);
     updateAsrVisibility();
+
+    function updateElbbePWarningVisibility() {
+        var visible = document.getElementById("prayer_names").value == "arabic";
+        document.getElementById("elbbep-warning").style.display = visible ? "block" : "none";
+    }
+    document.getElementById("prayer_names").addEventListener("change", updateElbbePWarningVisibility);
+    updateElbbePWarningVisibility();
 </script>
 {% endblock %}
