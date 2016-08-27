@@ -50,9 +50,9 @@ class Timeline:
         if clear:
             for x in range(-2, 3):
                 pending_pins += Timeline._delete_pins_for_date(user, date.today() + timedelta(days=x))
-        # Push pins for yesterday, today, tomorrow
-        # (15s total)
-        for x in range(-1, 2):
+        # Push pins for yesterday, today, tomorrow, and the day after
+        # (20 total - just to avoid timezone worries)
+        for x in range(-1, 3):
             pending_pins += Timeline._push_pins_for_date(user, date.today() + timedelta(days=x))
 
         if sync:
