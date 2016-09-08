@@ -87,6 +87,10 @@ class PrayTimes():
             'name': 'Diyanet İşleri Başkanlığı',
             'params': { 'fajr': 18, 'isha': 17 },
             'offsets': { 'fajr': -2, 'sunrise': -6, 'dhuhr': 7, 'asr': 4, 'maghrib': 7, 'isha': 1 } },
+        'Indonesia': {
+            'name': 'KEMENAG',
+            'params': { 'fajr': 20, 'isha': 18 },
+            'offsets': { 'fajr': 2, 'sunrise': -2, 'dhuhr': 3, 'asr': 2, 'maghrib': 2, 'isha': 2 } },
         'ISNA': {
             'name': 'Islamic Society of North America (ISNA)',
             'params': { 'fajr': 15, 'isha': 15 } },
