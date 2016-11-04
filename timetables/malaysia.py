@@ -25,10 +25,11 @@ class Malaysia(Timetable):
         return cls._lookupZone(location).Code
 
     @classmethod
-    def _mangleTime(cls, time_str, date, aft):
+    def _mangleTime(cls, time_str, date, aft, maybe_morn):
         time = datetime.strptime(time_str, "%H:%M").time()
         if aft:
-            if time.hour < 12:
+            # 10 allows for exceptionally early dhuhr.
+            if time.hour < (10 if maybe_morn else 12):
                 time = time.replace(hour=time.hour + 12)
         dt = TIMEZONE.localize(datetime.combine(date, time))
         utc_dt = dt.astimezone(utc).replace(tzinfo=None)
@@ -53,12 +54,12 @@ class Malaysia(Timetable):
             day, fajr, _, sunrise, dhuhr, asr, maghrib, isha = time_data.groups()
             this_date = date.replace(day=int(day))
             results.append((zone.Name, this_date, {
-                        "fajr": cls._mangleTime(fajr, date, False),
-                        "sunrise": cls._mangleTime(sunrise, date, False),
-                        "dhuhr": cls._mangleTime(dhuhr, date, True),
-                        "asr": cls._mangleTime(asr, date, True),
-                        "maghrib": cls._mangleTime(maghrib, date, True),
-                        "isha": cls._mangleTime(isha, date, True),
+                        "fajr": cls._mangleTime(fajr, date, False, False),
+                        "sunrise": cls._mangleTime(sunrise, date, False, False),
+                        "dhuhr": cls._mangleTime(dhuhr, date, True, True),
+                        "asr": cls._mangleTime(asr, date, True, False),
+                        "maghrib": cls._mangleTime(maghrib, date, True, False),
+                        "isha": cls._mangleTime(isha, date, True, False),
                         }
                     ))
         return results
