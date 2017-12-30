@@ -51,7 +51,7 @@ class Malaysia(Timetable):
         fixed_time_table_text = re.sub(r"([0-2]?\d)[:.]([0-6]\d)", r"\1:\2", time_table.text)
         results = []
         for time_data in re.finditer(TIME_DATA_PATTERN, fixed_time_table_text, re.DOTALL):
-            day, fajr, _, sunrise, dhuhr, asr, maghrib, isha = time_data.groups()
+            day, _, fajr, sunrise, dhuhr, asr, maghrib, isha = time_data.groups()
             this_date = date.replace(day=int(day))
             results.append((zone.Name, this_date, {
                         "fajr": cls._mangleTime(fajr, date, False, False),
